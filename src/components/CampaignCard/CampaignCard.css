@@ -1,0 +1,7 @@
+.campaign-card-details strong {
+  color: var(--light-orange);
+}
+
+[data-theme="dark"] .campaign-card-details strong {
+  color: var(--dark-orange);
+}

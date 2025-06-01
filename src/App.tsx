@@ -1,19 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import CampaignFormPage from "./pages/CampaignFormPage/CampaignFormPage";
 import PageWrapper from "./wrappers/PageWrapper";
+import { NewCampaign } from "./pages/NewCampaign/NewCampaign";
 
 function App() {
   return (
-    <PageWrapper>
-      <BrowserRouter>
+    <BrowserRouter>
+      <PageWrapper>
         <Routes>
-          <Route
-            path="/campaigns/new"
-            element={<CampaignFormPage mode="create" />}
-          />
+          <Route path="/new" element={<NewCampaign />} />
         </Routes>
-      </BrowserRouter>
-    </PageWrapper>
+      </PageWrapper>
+    </BrowserRouter>
   );
 }
 
