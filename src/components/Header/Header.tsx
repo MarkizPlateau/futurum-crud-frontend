@@ -17,27 +17,27 @@ export const Header = () => {
   const boxShadowStrong = "0px 5px 15px 0px rgba(0, 0, 0, 0.4)";
   const boxShadow = useColorModeValue("sm", boxShadowStrong);
 
-  useEffect(() => {
-    if (localStorage.getItem("campaigns")) {
-      const campaignsList = localStorage.getItem("campaigns");
-      if (campaignsList) {
-        const parsedCampaignList = JSON.parse(campaignsList);
-        const totalBudget = parsedCampaignList.reduce(
-          (acc: number, campaign: { fund: number }) =>
-            acc + Number(campaign.fund),
-          0
-        );
+  // useEffect(() => {
+  //   if (localStorage.getItem("campaigns")) {
+  //     const campaignsList = localStorage.getItem("campaigns");
+  //     if (campaignsList) {
+  //       const parsedCampaignList = JSON.parse(campaignsList);
+  //       const totalBudget = parsedCampaignList.reduce(
+  //         (acc: number, campaign: { fund: number }) =>
+  //           acc + Number(campaign.fund),
+  //         0
+  //       );
 
-        setCampaignBudget(campaignBudget - totalBudget);
-        localStorage.setItem("campaignsBudget", JSON.stringify(totalBudget));
-      }
-    } else {
-      const campaignBudget = localStorage.getItem("campaignsBudget");
-      if (campaignBudget) {
-        setCampaignBudget(JSON.parse(campaignBudget));
-      }
-    }
-  }, [campaignBudget]);
+  //       setCampaignBudget(campaignBudget - totalBudget);
+  //       localStorage.setItem("campaignsBudget", JSON.stringify(totalBudget));
+  //     }
+  //   } else {
+  //     const campaignBudget = localStorage.getItem("campaignsBudget");
+  //     if (campaignBudget) {
+  //       setCampaignBudget(JSON.parse(campaignBudget));
+  //     }
+  //   }
+  // }, [campaignBudget]);
 
   const { colorMode } = useColorMode();
   const isLightMode = colorMode === "light";
