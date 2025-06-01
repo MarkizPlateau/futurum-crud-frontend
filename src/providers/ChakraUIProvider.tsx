@@ -1,5 +1,5 @@
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { ThemeProvider } from "next-themes";
+import theme from "@/styles/theme";
+import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
 
 export const ChakraUIProvider = ({
   children,
@@ -7,8 +7,8 @@ export const ChakraUIProvider = ({
   children: React.ReactNode;
 }) => {
   return (
-    <ChakraProvider value={defaultSystem}>
-      <ThemeProvider>{children}</ThemeProvider>
+    <ChakraProvider theme={theme}>
+      <ColorModeProvider>{children}</ColorModeProvider>
     </ChakraProvider>
   );
 };
