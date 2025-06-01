@@ -66,9 +66,9 @@ export const CampaignForm = ({
       status: Status.ON,
       town: undefined,
       radius: 1,
+      ...defaultValues,
     },
   });
-  console.log("Errors:", errors);
 
   const handleSave = (data: CampaignFormData) => {
     const completeData: CampaignFormData = {
@@ -296,15 +296,6 @@ export const CampaignForm = ({
           </Alert>
           <CampaignCard campaign={submittedData} my="2" />
         </>
-      )}
-
-      {campaignList.length > 0 && (
-        <Box mt={8} p={4} borderWidth="1px" borderRadius="md">
-          <h2>Lista kampanii:</h2>
-          {campaignList.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} mb={4} />
-          ))}
-        </Box>
       )}
     </Box>
   );

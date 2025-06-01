@@ -11,11 +11,14 @@ import {
   useColorModeValue,
   VStack,
   Flex,
+  Button,
+  Icon,
 } from "@chakra-ui/react";
 import { textOrange } from "@/styles/styles.ts";
 import { Status } from "@/types/campaign";
 import type { CampaignFormData } from "../CampaignForm/schema";
 import { CampaignCardStatus } from "../CampaignCardStatus/CampaignCardStatus";
+import { LuCirclePlus } from "react-icons/lu";
 
 interface CampaignCardProps extends BoxProps {
   campaign: CampaignFormData;
@@ -36,12 +39,24 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
       {...props}
     >
       <Stack spacing={2}>
-        <Heading size="md" as="h3">
-          Campaign name:{" "}
-          <Text as="span" ml="2" {...textOrange}>
-            {campaign.name}
-          </Text>
-        </Heading>
+        <Flex justifyContent="space-between">
+          <Heading size="md" as="h3">
+            Campaign name:{" "}
+            <Text as="span" ml="2" {...textOrange}>
+              {campaign.name}
+            </Text>
+          </Heading>
+          <Button
+            as="a"
+            href={`${campaign.id}/campaign`}
+            colorScheme="orange"
+            alignItems="center"
+            gap="2"
+          >
+            Edit Campaign
+            <Icon as={LuCirclePlus} boxSize={5} mt="1" />
+          </Button>
+        </Flex>
 
         {campaign.picture && (
           <Image
