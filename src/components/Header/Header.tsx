@@ -7,13 +7,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import ColorModeSwitcher from "../ColorModeSwitcher/ColorModeSwitcher";
-import { useEffect, useState } from "react";
 import { CAMPAIGN_BUDGET, CURRENCY } from "@/constants/constants";
 import { useColorMainText } from "@/hooks";
 
 export const Header = () => {
-  const [campaignBudget, setCampaignBudget] = useState<number>(5000);
-
   const boxShadowStrong = "0px 5px 15px 0px rgba(0, 0, 0, 0.4)";
   const boxShadow = useColorModeValue("sm", boxShadowStrong);
 
@@ -89,8 +86,8 @@ export const Header = () => {
               fontWeight="bold"
               color={isLightMode ? "lightMode.orange" : "darkMode.orange"}
             >
-              {campaignBudget ? campaignBudget.toFixed(2) : CAMPAIGN_BUDGET}{" "}
-              {CURRENCY}
+              {/* {campaignBudget ? campaignBudget.toFixed(2) : CAMPAIGN_BUDGET}{" "} */}
+              {CAMPAIGN_BUDGET} {CURRENCY}
             </Text>
           </Heading>
         </Flex>

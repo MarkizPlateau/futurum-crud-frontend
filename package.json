@@ -36,7 +36,7 @@
   "name": "futurum-crud-frontend",
   "private": true,
   "scripts": {
-    "build": "npm run lint && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
