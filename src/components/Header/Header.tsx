@@ -7,37 +7,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import ColorModeSwitcher from "../ColorModeSwitcher/ColorModeSwitcher";
-import { useEffect, useState } from "react";
 import { CAMPAIGN_BUDGET, CURRENCY } from "@/constants/constants";
-import { useColorMainText } from "@/hooks";
+import { useCampaignContext, useColorMainText } from "@/hooks";
 
 export const Header = () => {
-  const [campaignBudget, setCampaignBudget] = useState<number>(5000);
+  const { state } = useCampaignContext();
 
   const boxShadowStrong = "0px 5px 15px 0px rgba(0, 0, 0, 0.4)";
   const boxShadow = useColorModeValue("sm", boxShadowStrong);
-
-  useEffect(() => {
-    if (localStorage.getItem("campaigns")) {
-      const campaignsList = localStorage.getItem("campaigns");
-      if (campaignsList) {
-        const parsedCampaignList = JSON.parse(campaignsList);
-        const totalBudget = parsedCampaignList.reduce(
-          (acc: number, campaign: { fund: number }) =>
-            acc + Number(campaign.fund),
-          0
-        );
-
-        setCampaignBudget(campaignBudget - totalBudget);
-        localStorage.setItem("campaignsBudget", JSON.stringify(totalBudget));
-      }
-    } else {
-      const campaignBudget = localStorage.getItem("campaignsBudget");
-      if (campaignBudget) {
-        setCampaignBudget(JSON.parse(campaignBudget));
-      }
-    }
-  }, [campaignBudget]);
 
   const { colorMode } = useColorMode();
   const isLightMode = colorMode === "light";
@@ -62,10 +39,11 @@ export const Header = () => {
       >
         <Flex alignItems="center" gap={["2", "4"]}>
           <a
-            href="https://futurumtechnology.pl/index.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit Futurum Technology website"
+            // href="https://futurumtechnology.pl/index.html"
+            // target="_blank"
+            // rel="noopener noreferrer"
+            // aria-label="Visit Futurum Technology website"
+            href="/"
           >
             <Image
               src={isLightMode ? "/logo_light.png" : "/logo_dark.png"}
@@ -89,7 +67,9 @@ export const Header = () => {
               fontWeight="bold"
               color={isLightMode ? "lightMode.orange" : "darkMode.orange"}
             >
-              {campaignBudget ? campaignBudget.toFixed(2) : CAMPAIGN_BUDGET}{" "}
+              {state.campaignBudget
+                ? state.campaignBudget.toFixed(2)
+                : CAMPAIGN_BUDGET}{" "}
               {CURRENCY}
             </Text>
           </Heading>

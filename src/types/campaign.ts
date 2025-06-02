@@ -28,6 +28,7 @@ export class Campaign {
   "id": string;
   "name": string;
   "keywords": string[];
+  "picture"?: string;
   "bid": number;
   "fund": number;
   "status": Status;

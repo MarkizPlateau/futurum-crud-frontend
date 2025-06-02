@@ -11,8 +11,8 @@ export const CampaignCardStatus = ({
   ...props
 }: CampaignCardStatusType): JSX.Element => {
   return (
-    <Flex alignItems="center" justifyContent="space-between" {...props}>
-      <Text>
+    <Flex alignItems="center" justifyContent="space-between" {...props} gap="1">
+      <Text textAlign="end">
         Campaign status:{" "}
         <Text as="span" color={isActive ? "green.400" : "red.500"}>
           {isActive ? "Active" : "Inactive"}
