@@ -1,20 +1,22 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import CampaignCard from "@/components/CampaignCard/CampaignCard";
 import { useCampaignContext, useColorMainText } from "@/hooks";
+import { MIN_FUND } from "@/constants/constants";
+import { useNavigate } from "react-router-dom";
 
 export const LandingPage = () => {
   const { state } = useCampaignContext();
-
+  const navigate = useNavigate();
   const mainText = useColorMainText();
   return (
     <Box>
       <Flex direction="column">
         <Button
-          as="a"
-          href="/new"
           colorScheme="orange"
           size={{ base: "sm", md: "md" }}
           ml="auto"
+          onClick={() => navigate("/new")}
+          isDisabled={state.campaignBudget < MIN_FUND}
         >
           Create New
         </Button>

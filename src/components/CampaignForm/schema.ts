@@ -45,12 +45,19 @@ export const campaignSchema = ({
       radius: z.number().min(1, "Radius must be greater than 0 km"),
     })
     .superRefine((data, ctx) => {
-      if (data.fund > availableBudget + (defaultValues.fund || 0)) {
+      if (
+        data.fund >
+        (availableBudget > MIN_FUND
+          ? availableBudget + (defaultValues.fund || 0)
+          : availableBudget)
+      ) {
         ctx.addIssue({
           path: ["fund"],
           code: z.ZodIssueCode.custom,
           message: `Fund cannot exceed available budget (${
-            availableBudget + (defaultValues.fund || 0)
+            availableBudget > MIN_FUND
+              ? availableBudget + (defaultValues.fund || 0)
+              : availableBudget
           })`,
         });
       }
