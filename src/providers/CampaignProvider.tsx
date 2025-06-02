@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import { CAMPAIGN_BUDGET } from "@/constants/constants";
 import type { Campaign } from "@/types/campaign";
+import { MOCKS } from "@/mocks/mocks";
 
 export type CampaignAction =
   | { type: "SET_CAMPAIGNS"; payload: Campaign[] }
@@ -47,8 +48,7 @@ const campaignReducer = (
         (acc, campaign) => acc + campaign.fund,
         0
       );
-
-      const newBudget = state.campaignBudget - fundSum;
+      const newBudget = CAMPAIGN_BUDGET - Number(fundSum.toFixed(2));
       localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
@@ -66,7 +66,7 @@ const campaignReducer = (
         (acc, campaign) => acc + campaign.fund,
         0
       );
-      const newBudget = CAMPAIGN_BUDGET - fundSum;
+      const newBudget = CAMPAIGN_BUDGET - Number(fundSum.toFixed(2));
       localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
@@ -84,7 +84,7 @@ const campaignReducer = (
         (acc, campaign) => acc + campaign.fund,
         0
       );
-      const newBudget = CAMPAIGN_BUDGET - fundSum;
+      const newBudget = CAMPAIGN_BUDGET - Number(fundSum.toFixed(2));
       localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
@@ -115,18 +115,17 @@ export const CampaignProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedCampaigns = localStorage.getItem("campaigns");
     const storedBudget = localStorage.getItem("campaignBudget");
-    console.log("Initializing CampaignProvider", storedCampaigns, storedBudget);
     if (storedCampaigns) {
       dispatch({ type: "SET_CAMPAIGNS", payload: JSON.parse(storedCampaigns) });
     } else {
-      dispatch({ type: "SET_CAMPAIGNS", payload: [] });
+      dispatch({ type: "SET_CAMPAIGNS", payload: MOCKS.INITIAL_DATA });
     }
     if (storedBudget) {
       dispatch({ type: "SET_BUDGET", payload: JSON.parse(storedBudget) });
     } else {
       dispatch({
         type: "SET_BUDGET",
-        payload: CAMPAIGN_BUDGET,
+        payload: MOCKS.INITIAL_BUDGET,
       });
     }
   }, []);
