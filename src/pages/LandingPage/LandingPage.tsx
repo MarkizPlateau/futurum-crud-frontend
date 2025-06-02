@@ -1,16 +1,10 @@
-import { useEffect, useState } from "react";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import type { CampaignFormData } from "@/components/CampaignForm/schema";
 import CampaignCard from "@/components/CampaignCard/CampaignCard";
-import { useColorMainText } from "@/hooks";
+import { useCampaignContext, useColorMainText } from "@/hooks";
 
 export const LandingPage = () => {
-  const [campaignList, setCampaignList] = useState<CampaignFormData[]>([]);
-  useEffect(() => {
-    const stored = localStorage.getItem("campaigns");
-    const campaigns = stored ? JSON.parse(stored) : [];
-    setCampaignList(campaigns);
-  }, []);
+  const { state } = useCampaignContext();
+
   const mainText = useColorMainText();
   return (
     <Box>
@@ -35,7 +29,7 @@ export const LandingPage = () => {
         </Heading>
       </Flex>
 
-      {campaignList.length > 0 ? (
+      {state.campaigns.length > 0 ? (
         <Box
           mt={8}
           borderWidth="1px"
@@ -43,7 +37,7 @@ export const LandingPage = () => {
           px={{ base: 4, md: 20 }}
           pt="10"
         >
-          {campaignList.map((campaign) => (
+          {state.campaigns.map((campaign) => (
             <CampaignCard
               key={campaign.id}
               campaign={campaign}

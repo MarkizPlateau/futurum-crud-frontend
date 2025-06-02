@@ -1,26 +1,42 @@
 import CampaignForm from "@/components/CampaignForm/CampaignForm";
-import { MIN_BID } from "@/constants/constants";
-import { useColorMainText } from "@/hooks";
-import { Status } from "@/types/campaign";
-import { Heading } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { NavigationButton } from "@/components/NavigationButton/NavigationButton";
+import { ROUTES } from "@/constants/routes";
+import { useCampaignContext, useColorMainText } from "@/hooks";
+import { Flex, Heading, Spinner } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 export const EditCampaignPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { state } = useCampaignContext();
+  const campaign = state.campaigns.find((c) => c.id === id);
+  useEffect(() => {
+    if (state.campaigns.length > 0 && !campaign) {
+      navigate(ROUTES.LANDING);
+    }
+  }, [campaign, state.campaigns, navigate]);
+
   const mainColorText = useColorMainText();
-  const defaultValues = {
-    id: id,
-    name: "",
-    keywords: [],
-    picture: undefined,
-    bid: MIN_BID,
-    fund: 0,
-    status: Status.ON,
-    town: undefined,
-    radius: 1,
-  };
+
+  if (!campaign)
+    return (
+      <Flex w="full">
+        <Spinner size="xl" color="orange" mx="auto" />
+      </Flex>
+    );
+
   return (
     <>
+      <NavigationButton
+        href="/"
+        mb={{ base: 4, md: 2 }}
+        colorScheme="orange"
+        variant="outline"
+        size={{ base: "sm", md: "md" }}
+      >
+        Back to Campaigns
+      </NavigationButton>
       <Heading
         as="h1"
         size="lg"
@@ -31,7 +47,7 @@ export const EditCampaignPage = () => {
       >
         Edit Campaign with ID: {id}
       </Heading>
-      <CampaignForm defaultValues={defaultValues} />
+      <CampaignForm initialValues={campaign} />
     </>
   );
 };

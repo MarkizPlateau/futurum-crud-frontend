@@ -15,16 +15,21 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { textOrange } from "@/styles/styles.ts";
-import { Status } from "@/types/campaign";
-import type { CampaignFormData } from "../CampaignForm/schema";
+import { Campaign, Status } from "@/types/campaign";
 import { CampaignCardStatus } from "../CampaignCardStatus/CampaignCardStatus";
 import { LuCirclePlus } from "react-icons/lu";
+import { useCampaignContext } from "@/hooks";
 
 interface CampaignCardProps extends BoxProps {
-  campaign: CampaignFormData;
+  campaign: Campaign;
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
+  const { dispatch } = useCampaignContext();
+
+  const handleDeleteCampaign = (id: string) => {
+    dispatch({ type: "REMOVE_CAMPAIGN", payload: id });
+  };
   const isActive = campaign.status === Status.ON;
   const cardBackgroundColor = useColorModeValue("customWhite", "#252d3e");
   const keywordsTextColor = useColorModeValue("main", "customWhite");
@@ -105,7 +110,24 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
               <strong>Radius:</strong> {campaign.radius} km
             </Text>
           </VStack>
-          <CampaignCardStatus isActive={isActive} alignSelf="flex-end" />
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            gap={{ base: 2, md: 4 }}
+            alignSelf="flex-end"
+            alignItems="flex-end"
+          >
+            <CampaignCardStatus isActive={isActive} />
+            <Button
+              colorScheme="red"
+              size="sm"
+              maxWidth="min-content"
+              onClick={() => {
+                handleDeleteCampaign(campaign.id);
+              }}
+            >
+              Delete
+            </Button>
+          </Flex>
         </Flex>
       </Stack>
     </Box>

@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
-import {
-  campaignSchema,
-  type CampaignFormData,
-} from "@/components/CampaignForm/schema";
+import { campaignSchema } from "@/components/CampaignForm/schema";
 import {
   Box,
   Button,
@@ -31,32 +28,35 @@ import {
   MIN_FUND,
   TOWN_OPTIONS,
 } from "@/constants/constants";
-import { Status } from "@/types/campaign";
-import CampaignCard from "../CampaignCard/CampaignCard";
+import { Campaign, Status } from "@/types/campaign";
+import { useCampaignContext } from "@/hooks";
+import type { z } from "zod";
 
 export const CampaignForm = ({
-  defaultValues,
+  initialValues,
 }: {
-  defaultValues?: Partial<CampaignFormData>;
+  initialValues?: Partial<Campaign>;
 }) => {
+  const { state, dispatch } = useCampaignContext();
+  const alertRef = useRef<HTMLDivElement | null>(null);
   const [keywords, setKeywords] = useState<string[]>(
-    defaultValues?.keywords || []
+    initialValues?.keywords || []
   );
   const [keywordInput, setKeywordInput] = useState("");
-  const [submittedData, setSubmittedData] = useState<CampaignFormData | null>(
-    null
-  );
-  const [campaignList, setCampaignList] = useState<CampaignFormData[]>([]);
+  const [submittedData, setSubmittedData] = useState<Campaign | null>(null);
+
+  const schema = campaignSchema(state.campaignBudget);
+  type CampaignFormData = z.infer<typeof schema>;
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, defaultValues: formDefaultValues },
     reset,
     setValue,
   } = useForm<CampaignFormData>({
-    resolver: zodResolver(campaignSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       keywords: [],
@@ -66,34 +66,42 @@ export const CampaignForm = ({
       status: Status.ON,
       town: undefined,
       radius: 1,
-      ...defaultValues,
+      ...initialValues,
     },
   });
 
-  const handleSave = (data: CampaignFormData) => {
-    const completeData: CampaignFormData = {
+  const handleSave = (data: CampaignFormData | Campaign) => {
+    const completeData = {
       ...data,
       keywords,
-      id: defaultValues?.id || uuidv4(),
-    };
+      id: initialValues?.id || uuidv4(),
+    } as Campaign;
     setSubmittedData(completeData);
-    localStorage.setItem(
-      "campaigns",
-      JSON.stringify([...campaignList, completeData])
-    );
+
+    if (initialValues?.id) {
+      dispatch({
+        type: "EDIT_CAMPAIGN",
+        payload: completeData,
+      });
+    } else {
+      dispatch({
+        type: "ADD_CAMPAIGN",
+        payload: completeData,
+      });
+    }
     reset();
     setKeywords([]);
+    console.log("Alert ref:", alertRef.current);
+
+    alertRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   useEffect(() => {
     setValue("keywords", keywords);
   }, [keywords, setValue]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("campaigns");
-    const campaigns = stored ? JSON.parse(stored) : [];
-    setCampaignList(campaigns);
-  }, [defaultValues, reset]);
 
   const addKeyword = (kw: string) => {
     kw = kw.trim();
@@ -104,12 +112,16 @@ export const CampaignForm = ({
   };
 
   return (
-    <Box maxW="500px" mx="auto" mt={8}>
+    <Box maxW="500px" mx="auto" mt="4" mb="4">
       <form onSubmit={handleSubmit(handleSave)}>
         <Stack spacing={4}>
           <FormControl isInvalid={!!errors.name} isRequired>
             <FormLabel>Campaign name</FormLabel>
-            <Input placeholder="Name" {...register("name")} />
+            <Input
+              placeholder="Name"
+              {...register("name")}
+              defaultValue={formDefaultValues?.name}
+            />
             <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
           </FormControl>
 
@@ -202,6 +214,7 @@ export const CampaignForm = ({
               {...register("picture", {
                 setValueAs: (value) => (value === "" ? undefined : value),
               })}
+              defaultValue={formDefaultValues?.picture}
             />
             <FormErrorMessage>{errors.picture?.message}</FormErrorMessage>
           </FormControl>
@@ -218,7 +231,7 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.fund} isRequired>
-            <FormLabel>Campaign budget (`${CURRENCY}`)</FormLabel>
+            <FormLabel>Campaign budget ({CURRENCY})</FormLabel>
             <Input
               type="number"
               min={MIN_FUND}
@@ -254,7 +267,11 @@ export const CampaignForm = ({
               })}
             >
               {TOWN_OPTIONS.map((town) => (
-                <option key={town} value={town}>
+                <option
+                  key={town}
+                  value={town}
+                  defaultValue={formDefaultValues?.town}
+                >
                   {town}
                 </option>
               ))}
@@ -269,6 +286,7 @@ export const CampaignForm = ({
               min={1}
               step={1}
               {...register("radius", { valueAsNumber: true })}
+              defaultValue={formDefaultValues?.radius}
             />
             <FormErrorMessage>{errors.radius?.message}</FormErrorMessage>
           </FormControl>
@@ -278,25 +296,27 @@ export const CampaignForm = ({
           </Button>
         </Stack>
       </form>
-      {submittedData && (
-        <>
-          <Alert
-            borderRadius="base"
-            colorScheme="green"
-            mt="3"
-            status="success"
-            aria-live="polite"
-          >
-            <AlertIcon />
-            <Box>
-              <AlertTitle mr="2">
-                {"Congratulations, you have successfully added a campaign."}
-              </AlertTitle>
-            </Box>
-          </Alert>
-          <CampaignCard campaign={submittedData} my="2" />
-        </>
-      )}
+      <Box ref={alertRef}>
+        {submittedData && (
+          <>
+            <Alert
+              borderRadius="base"
+              colorScheme="green"
+              mt="3"
+              status="success"
+              aria-live="polite"
+            >
+              <AlertIcon />
+              <Box>
+                <AlertTitle mr="2">
+                  Congratulations, you have successfully
+                  {initialValues?.id ? " edited" : " added"} a campaign.
+                </AlertTitle>
+              </Box>
+            </Alert>
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
