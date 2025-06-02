@@ -1,3 +1,5 @@
+import { Status } from "@/types/campaign";
+
 export const TOWN_OPTIONS = [
   "Białystok",
   "Bydgoszcz",
@@ -56,3 +58,14 @@ export const CAMPAIGN_BUDGET = 4000;
 export const MIN_BID = 5;
 export const MIN_FUND = MIN_BID * 20;
 export const CURRENCY = "PLN";
+
+export const FORM_INITIAL_VALUES = {
+  name: "",
+  keywords: [],
+  picture: undefined,
+  bid: MIN_BID,
+  fund: MIN_FUND,
+  status: Status.ON,
+  town: undefined,
+  radius: 1,
+};

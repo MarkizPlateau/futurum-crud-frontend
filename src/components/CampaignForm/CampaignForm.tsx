@@ -23,6 +23,7 @@ import {
 } from "@chakra-ui/react";
 import {
   CURRENCY,
+  FORM_INITIAL_VALUES,
   KEYWORD_SUGGESTIONS,
   MIN_BID,
   MIN_FUND,
@@ -39,13 +40,17 @@ export const CampaignForm = ({
 }) => {
   const { state, dispatch } = useCampaignContext();
   const alertRef = useRef<HTMLDivElement | null>(null);
+  // const [responseError, setResponseError] = useState<string | null>(null);
   const [keywords, setKeywords] = useState<string[]>(
     initialValues?.keywords || []
   );
   const [keywordInput, setKeywordInput] = useState("");
   const [submittedData, setSubmittedData] = useState<Campaign | null>(null);
 
-  const schema = campaignSchema(state.campaignBudget);
+  const schema = campaignSchema({
+    availableBudget: state.campaignBudget,
+    defaultValues: initialValues || FORM_INITIAL_VALUES,
+  });
   type CampaignFormData = z.infer<typeof schema>;
 
   const {
@@ -58,16 +63,10 @@ export const CampaignForm = ({
   } = useForm<CampaignFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
-      keywords: [],
-      picture: undefined,
-      bid: MIN_BID,
-      fund: MIN_FUND,
-      status: Status.ON,
-      town: undefined,
-      radius: 1,
+      ...FORM_INITIAL_VALUES,
       ...initialValues,
     },
+    mode: "all",
   });
 
   const handleSave = (data: CampaignFormData | Campaign) => {
@@ -78,6 +77,8 @@ export const CampaignForm = ({
     } as Campaign;
     setSubmittedData(completeData);
 
+    // Normally here we would use try catch to handle API errors, just like in other places where we use REST / graphql / async operations, but I found that localStorage is enough in this project
+    // try {
     if (initialValues?.id) {
       dispatch({
         type: "EDIT_CAMPAIGN",
@@ -89,6 +90,15 @@ export const CampaignForm = ({
         payload: completeData,
       });
     }
+    // } catch (error) {
+    // console.error("Error saving campaign:", error);
+    // throw new Error("Failed to save campaign");
+    // if (error instanceof Error) {
+    //   setResponseError(error.message); // lub `setResponseError(error)`, jeśli Error | null
+    // } else {
+    //   setResponseError("Unknown error occurred");
+    // }
+    // }
     reset();
     setKeywords([]);
     alertRef.current?.scrollIntoView({
@@ -108,6 +118,7 @@ export const CampaignForm = ({
       setKeywordInput("");
     }
   };
+  console.log("errors", errors);
 
   return (
     <Box maxW="500px" mx="auto" mt="4" mb="4">
@@ -204,7 +215,22 @@ export const CampaignForm = ({
               </Box>
             )}
           </FormControl>
-
+          {errors.keywords?.message && keywords.length === 0 && (
+            <Alert
+              borderRadius="base"
+              colorScheme="red"
+              mt="1"
+              status="error"
+              py="1"
+            >
+              <AlertIcon />
+              <Box>
+                <AlertTitle mr="1" fontSize="sm">
+                  {errors.keywords?.message} ( + ) button
+                </AlertTitle>
+              </Box>
+            </Alert>
+          )}
           <FormControl isInvalid={!!errors.picture}>
             <FormLabel>You can add an optional campaign photo</FormLabel>
             <Input
@@ -239,16 +265,16 @@ export const CampaignForm = ({
             <FormErrorMessage>{errors.fund?.message}</FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.status} isRequired>
+          <FormControl isInvalid={!!errors.status}>
             <FormLabel>Status</FormLabel>
             <Controller
               control={control}
               name="status"
               render={({ field }) => (
                 <Switch
-                  isChecked={field.value === "on"}
+                  isChecked={field.value === Status.ON}
                   onChange={(e) =>
-                    field.onChange(e.target.checked ? "on" : "off")
+                    field.onChange(e.target.checked ? Status.ON : Status.OFF)
                   }
                 />
               )}
