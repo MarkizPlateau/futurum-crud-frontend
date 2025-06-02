@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import ColorModeSwitcher from "../ColorModeSwitcher/ColorModeSwitcher";
-import { CAMPAIGN_BUDGET, CURRENCY } from "@/constants/constants";
+import { CURRENCY } from "@/constants/constants";
 import { useCampaignContext, useColorMainText } from "@/hooks";
 
 export const Header = () => {
