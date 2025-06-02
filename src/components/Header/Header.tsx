@@ -67,10 +67,7 @@ export const Header = () => {
               fontWeight="bold"
               color={isLightMode ? "lightMode.orange" : "darkMode.orange"}
             >
-              {state.campaignBudget
-                ? Number(state.campaignBudget).toFixed(2)
-                : CAMPAIGN_BUDGET}{" "}
-              {CURRENCY}
+              {Number(state.campaignBudget).toFixed(2)} {CURRENCY}
             </Text>
           </Heading>
         </Flex>
