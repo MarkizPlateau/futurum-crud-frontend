@@ -91,8 +91,6 @@ export const CampaignForm = ({
     }
     reset();
     setKeywords([]);
-    console.log("Alert ref:", alertRef.current);
-
     alertRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "start",
