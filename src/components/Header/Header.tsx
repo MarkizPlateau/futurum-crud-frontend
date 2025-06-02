@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import ColorModeSwitcher from "../ColorModeSwitcher/ColorModeSwitcher";
-import { CAMPAIGN_BUDGET, CURRENCY } from "@/constants/constants";
+import { CURRENCY } from "@/constants/constants";
 import { useCampaignContext, useColorMainText } from "@/hooks";
 
 export const Header = () => {
@@ -67,10 +67,7 @@ export const Header = () => {
               fontWeight="bold"
               color={isLightMode ? "lightMode.orange" : "darkMode.orange"}
             >
-              {state.campaignBudget
-                ? Number(state.campaignBudget).toFixed(2)
-                : CAMPAIGN_BUDGET}{" "}
-              {CURRENCY}
+              {Number(state.campaignBudget).toFixed(2)} {CURRENCY}
             </Text>
           </Heading>
         </Flex>
