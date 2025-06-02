@@ -43,10 +43,17 @@ const campaignReducer = (
           ? [...state.campaigns, action.payload]
           : [action.payload];
       localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+      const fundSum = updatedCampaigns.reduce(
+        (acc, campaign) => acc + campaign.fund,
+        0
+      );
+
+      const newBudget = state.campaignBudget - fundSum;
+      localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
         campaigns: updatedCampaigns,
-        campaignBudget: state.campaignBudget - action.payload.fund,
+        campaignBudget: newBudget,
       };
     }
 
@@ -55,9 +62,16 @@ const campaignReducer = (
         c.id === action.payload.id ? action.payload : c
       );
       localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+      const fundSum = updatedCampaigns.reduce(
+        (acc, campaign) => acc + campaign.fund,
+        0
+      );
+      const newBudget = CAMPAIGN_BUDGET - fundSum;
+      localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
         campaigns: updatedCampaigns,
+        campaignBudget: newBudget,
       };
     }
 
@@ -66,13 +80,21 @@ const campaignReducer = (
         (c) => c.id !== action.payload
       );
       localStorage.setItem("campaigns", JSON.stringify(updatedCampaigns));
+      const fundSum = updatedCampaigns.reduce(
+        (acc, campaign) => acc + campaign.fund,
+        0
+      );
+      const newBudget = CAMPAIGN_BUDGET - fundSum;
+      localStorage.setItem("campaignBudget", JSON.stringify(newBudget));
       return {
         ...state,
         campaigns: updatedCampaigns,
+        campaignBudget: newBudget,
       };
     }
 
     case "SET_BUDGET":
+      localStorage.setItem("campaignBudget", JSON.stringify(action.payload));
       return { ...state, campaignBudget: action.payload };
     default:
       return state;
@@ -91,27 +113,9 @@ export const CampaignProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(campaignReducer, initialState);
 
   useEffect(() => {
-    if (state.campaigns.length > 0) {
-      const fundSum = state.campaigns.reduce(
-        (acc: number, campaign: { fund: number }) =>
-          acc + Number(campaign.fund),
-        0
-      );
-      dispatch({
-        type: "SET_BUDGET",
-        payload: JSON.parse(String(state.campaignBudget - fundSum)),
-      });
-    } else {
-      dispatch({
-        type: "SET_BUDGET",
-        payload: JSON.parse(String(CAMPAIGN_BUDGET)),
-      });
-    }
-  }, [state.campaigns]);
-
-  useEffect(() => {
     const storedCampaigns = localStorage.getItem("campaigns");
-    const storedBudget = localStorage.getItem("campaignsBudget");
+    const storedBudget = localStorage.getItem("campaignBudget");
+    console.log("Initializing CampaignProvider", storedCampaigns, storedBudget);
     if (storedCampaigns) {
       dispatch({ type: "SET_CAMPAIGNS", payload: JSON.parse(storedCampaigns) });
     } else {
