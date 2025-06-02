@@ -10,7 +10,7 @@ const PageWrapper = ({ children }: PageWrapperProps) => {
   return (
     <Box minH="100vh">
       <Header />
-      <Container as="main" maxW="container.xl" py={6}>
+      <Container as="main" maxW="container.xl" py={6} px={{ base: 4, sm: 10 }}>
         {children}
       </Container>
     </Box>
