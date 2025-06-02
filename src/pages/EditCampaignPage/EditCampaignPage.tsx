@@ -3,7 +3,7 @@ import { NavigationButton } from "@/components/NavigationButton/NavigationButton
 import { ROUTES } from "@/constants/routes";
 import { useCampaignContext, useColorMainText } from "@/hooks";
 import { Flex, Heading, Spinner } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 export const EditCampaignPage = () => {
@@ -11,6 +11,19 @@ export const EditCampaignPage = () => {
   const navigate = useNavigate();
   const { state } = useCampaignContext();
   const campaign = state.campaigns.find((c) => c.id === id);
+
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  useEffect(() => {
+    setIsInitialRender(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isInitialRender && !campaign) {
+      navigate(ROUTES.LANDING);
+    }
+  }, [isInitialRender, campaign, navigate]);
+
   useEffect(() => {
     if (state.campaigns.length > 0 && !campaign) {
       navigate(ROUTES.LANDING);
@@ -19,13 +32,13 @@ export const EditCampaignPage = () => {
 
   const mainColorText = useColorMainText();
 
-  if (!campaign)
+  if (!campaign) {
     return (
       <Flex w="full">
         <Spinner size="xl" color="orange" mx="auto" />
       </Flex>
     );
-
+  }
   return (
     <>
       <NavigationButton

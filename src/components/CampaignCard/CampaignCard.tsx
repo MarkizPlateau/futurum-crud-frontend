@@ -58,7 +58,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
             alignItems="center"
             gap="2"
           >
-            Edit Campaign
+            Edit
             <Icon as={LuCirclePlus} boxSize={5} mt="1" />
           </Button>
         </Flex>
