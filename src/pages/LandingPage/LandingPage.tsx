@@ -16,6 +16,7 @@ export const LandingPage = () => {
           size={{ base: "sm", md: "md" }}
           ml="auto"
           onClick={() => navigate("/new")}
+          aria-label="Create a new campaign"
           isDisabled={state.campaignBudget < MIN_FUND}
         >
           Create New
@@ -26,6 +27,7 @@ export const LandingPage = () => {
           mb="4"
           ml={{ base: "2", md: "4" }}
           color={mainText}
+          aria-live="polite"
         >
           Your Campaigns :
         </Heading>
@@ -33,23 +35,26 @@ export const LandingPage = () => {
 
       {state.campaigns.length > 0 ? (
         <Box
-          mt={8}
+          mt={2}
+          as="section"
           borderWidth="1px"
           borderRadius="md"
-          px={{ base: 4, md: 20 }}
-          pt="10"
+          px={{ base: 4, md: 10 }}
+          pt={{ base: 4, md: 10 }}
+          role="region"
+          aria-label="List of campaigns"
         >
           {state.campaigns.map((campaign) => (
             <CampaignCard
               key={campaign.id}
               campaign={campaign}
-              mb={4}
+              mb="6"
               maxWidth="600px"
             />
           ))}
         </Box>
       ) : (
-        <Text ml={{ base: "2", md: "4" }} pt="6">
+        <Text ml={{ base: "2", md: "4" }} pt="6" aria-live="polite">
           Currently you don't have any active Campaigns
         </Text>
       )}

@@ -125,8 +125,9 @@ export const CampaignForm = ({
       <form onSubmit={handleSubmit(handleSave)}>
         <Stack spacing={4}>
           <FormControl isInvalid={!!errors.name} isRequired>
-            <FormLabel>Campaign name</FormLabel>
+            <FormLabel htmlFor="name">Campaign name</FormLabel>
             <Input
+              id="name"
               placeholder="Name"
               {...register("name")}
               defaultValue={formDefaultValues?.name}
@@ -135,7 +136,7 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isRequired={keywords.length > 0 ? false : true}>
-            <FormLabel>Keywords</FormLabel>
+            <FormLabel htmlFor="keywordInput">Keywords</FormLabel>
             <HStack flexWrap="wrap" mb={2}>
               {keywords.map((kw) => (
                 <Tag
@@ -158,6 +159,7 @@ export const CampaignForm = ({
 
             <HStack>
               <Input
+                id="keywordInput"
                 placeholder="Add keyword..."
                 value={keywordInput}
                 onChange={(e) => setKeywordInput(e.target.value)}
@@ -173,6 +175,7 @@ export const CampaignForm = ({
                 colorScheme="blue"
                 variant="outline"
                 px={4}
+                aria-label="Add keyword"
               >
                 +
               </Button>
@@ -232,8 +235,11 @@ export const CampaignForm = ({
             </Alert>
           )}
           <FormControl isInvalid={!!errors.picture}>
-            <FormLabel>You can add an optional campaign photo</FormLabel>
+            <FormLabel htmlFor="picture">
+              You can add an optional campaign photo
+            </FormLabel>
             <Input
+              id="picture"
               placeholder="Picture"
               {...register("picture", {
                 setValueAs: (value) => (value === "" ? undefined : value),
@@ -244,8 +250,9 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.bid} isRequired>
-            <FormLabel>Bid (PLN)</FormLabel>
+            <FormLabel htmlFor="bid">Bid (PLN)</FormLabel>
             <Input
+              id="bid"
               type="number"
               min={MIN_BID}
               step={0.01}
@@ -255,8 +262,9 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.fund} isRequired>
-            <FormLabel>Campaign budget ({CURRENCY})</FormLabel>
+            <FormLabel htmlFor="fund">Campaign budget ({CURRENCY})</FormLabel>
             <Input
+              id="fund"
               type="number"
               min={MIN_FUND}
               step={0.01}
@@ -266,12 +274,13 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.status}>
-            <FormLabel>Status</FormLabel>
+            <FormLabel htmlFor="status">Status</FormLabel>
             <Controller
               control={control}
               name="status"
               render={({ field }) => (
                 <Switch
+                  id="status"
                   isChecked={field.value === Status.ON}
                   onChange={(e) =>
                     field.onChange(e.target.checked ? Status.ON : Status.OFF)
@@ -283,8 +292,9 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.town}>
-            <FormLabel>Miasto</FormLabel>
+            <FormLabel htmlFor="town">Miasto</FormLabel>
             <Select
+              id="town"
               placeholder="Select a city"
               {...register("town", {
                 setValueAs: (value) => (value === "" ? undefined : value),
@@ -304,8 +314,9 @@ export const CampaignForm = ({
           </FormControl>
 
           <FormControl isInvalid={!!errors.radius} isRequired>
-            <FormLabel>Promień (km)</FormLabel>
+            <FormLabel htmlFor="radius">Promień (km)</FormLabel>
             <Input
+              id="radius"
               type="number"
               min={1}
               step={1}
@@ -329,6 +340,7 @@ export const CampaignForm = ({
               mt="3"
               status="success"
               aria-live="polite"
+              aria-atomic="true"
             >
               <AlertIcon />
               <Box>

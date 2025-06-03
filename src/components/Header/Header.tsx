@@ -24,6 +24,7 @@ export const Header = () => {
   return (
     <Flex
       as="header"
+      role="banner"
       borderBottomWidth="1px"
       borderBottomColor={headerBorderColor}
       boxShadow={boxShadow}
@@ -44,6 +45,7 @@ export const Header = () => {
             // rel="noopener noreferrer"
             // aria-label="Visit Futurum Technology website"
             href="/"
+            aria-label="Go to homepage"
           >
             <Image
               src={isLightMode ? "/logo_light.png" : "/logo_dark.png"}
