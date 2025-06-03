@@ -38,6 +38,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
       borderWidth="1px"
       borderRadius="lg"
       boxShadow="sm"
+      as="article"
       p={4}
       w="full"
       bg={cardBackgroundColor}
@@ -57,6 +58,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, ...props }) => {
             colorScheme="orange"
             alignItems="center"
             gap="2"
+            aria-label={`Edit campaign ${campaign.name}`}
           >
             Edit
             <Icon as={LuCirclePlus} boxSize={5} mt="1" />
