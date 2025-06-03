@@ -73,7 +73,7 @@ export const campaignSchema = ({
         ctx.addIssue({
           path: ["bid"],
           code: z.ZodIssueCode.custom,
-          message: `Bid cannot be more than fund divided by 10, min bid: (${Math.floor(
+          message: `Bid cannot be more than fund divided by 10, max bid: (${Math.floor(
             data.fund / 10
           )})`,
         });

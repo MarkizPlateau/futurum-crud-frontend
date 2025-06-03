@@ -1,5 +1,5 @@
+import { NavigationButton } from "@/components";
 import CampaignForm from "@/components/CampaignForm/CampaignForm";
-import { NavigationButton } from "@/components/NavigationButton/NavigationButton";
 import { ROUTES } from "@/constants/routes";
 import { useCampaignContext, useColorMainText } from "@/hooks";
 import { Flex, Heading, Spinner } from "@chakra-ui/react";
@@ -19,23 +19,22 @@ export const EditCampaignPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!isInitialRender && !campaign) {
+    if (state.campaigns.length > 0 && !campaign && !isInitialRender) {
       navigate(ROUTES.LANDING);
     }
-  }, [isInitialRender, campaign, navigate]);
-
-  useEffect(() => {
-    if (state.campaigns.length > 0 && !campaign) {
-      navigate(ROUTES.LANDING);
-    }
-  }, [campaign, state.campaigns, navigate]);
+  }, [campaign, state.campaigns, navigate, isInitialRender]);
 
   const mainColorText = useColorMainText();
 
   if (!campaign) {
     return (
       <Flex w="full">
-        <Spinner size="xl" color="orange" mx="auto" />
+        <Spinner
+          size="xl"
+          color="orange"
+          mx="auto"
+          aria-label="Loading campaign data"
+        />
       </Flex>
     );
   }
@@ -47,6 +46,7 @@ export const EditCampaignPage = () => {
         colorScheme="orange"
         variant="outline"
         size={{ base: "sm", md: "md" }}
+        aria-label="Back to Campaigns"
       >
         Back to Campaigns
       </NavigationButton>
@@ -57,6 +57,7 @@ export const EditCampaignPage = () => {
         color={mainColorText}
         mx="auto"
         textAlign="center"
+        aria-live="polite"
       >
         Edit Campaign with ID: {id}
       </Heading>

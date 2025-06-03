@@ -1,5 +1,5 @@
+import { NavigationButton } from "@/components";
 import CampaignForm from "@/components/CampaignForm/CampaignForm";
-import { NavigationButton } from "@/components/NavigationButton/NavigationButton";
 import { useColorMainText } from "@/hooks";
 import { Heading } from "@chakra-ui/react";
 
@@ -13,6 +13,7 @@ export const NewCampaign = () => {
         colorScheme="orange"
         variant="outline"
         size={{ base: "sm", md: "md" }}
+        aria-label="Back to Campaigns"
       >
         Back to Campaigns
       </NavigationButton>
@@ -23,6 +24,7 @@ export const NewCampaign = () => {
         color={mainColorText}
         mx="auto"
         textAlign="center"
+        aria-live="polite"
       >
         Add New Campaign
       </Heading>
